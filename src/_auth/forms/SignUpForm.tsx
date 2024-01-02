@@ -14,11 +14,19 @@ import { Input } from "@/components/ui/input";
 import { SignUpValidationSchema } from "@/lib/validation";
 import { z } from "zod";
 import { Loader } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useToast } from "@/components/ui/use-toast";
+import { useCreateUserAccount, useSignInAccount } from "@/lib/react-query/queriesAndMutations";
+import { useUserContext } from "@/context/AuthContext";
 
 const SignUpForm = () => {
+  const { toast } = useToast();
+  const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
+  const navigate = useNavigate();
 
-  const isLoading = false;
+  const {mutateAsync: createUserAccount,isPending: isCreatingUser} = useCreateUserAccount();
+
+  const {mutateAsync: signInAccount,isPending: isSigningIn} = useSignInAccount();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignUpValidationSchema>>({
@@ -32,10 +40,39 @@ const SignUpForm = () => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof SignUpValidationSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof SignUpValidationSchema>) {
+    const newUser = await createUserAccount(values);
+
+    if (!newUser) {
+      return toast({
+        title: "Sign up failed. Please try again.",
+      });
+    }
+
+    const session = await signInAccount({
+      email: values.email,
+      password: values.password
+    })
+
+    if (!session) {
+      return toast({
+        title: "Sign in failed. Please try again.",
+      });
+    }
+
+    const isLoggedIn = await checkAuthUser();
+
+    if (isLoggedIn) {
+      form.reset();
+
+      navigate("/");
+    }else{
+      return toast({
+        title: "Sign in failed. Please try again.",
+      });
+    }
+
+    console.log(newUser);
   }
   return (
     <div>
@@ -107,11 +144,25 @@ const SignUpForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="shad-button_primary">{isLoading ? <div className="flex-center gap-2"><Loader />Loading...</div> : "Sign Up"}</Button>
+            <Button type="submit" className="shad-button_primary">
+              {isCreatingUser ? (
+                <div className="flex-center gap-2">
+                  <Loader />
+                  Loading...
+                </div>
+              ) : (
+                "Sign Up"
+              )}
+            </Button>
 
             <p className="text-small-regular text-light-2 text-center mt-2">
               Already have an Account ?
-              <Link to={"/sign-in"} className="text-primary-500 text-small-semibold ml-1">Log in</Link>
+              <Link
+                to={"/sign-in"}
+                className="text-primary-500 text-small-semibold ml-1"
+              >
+                Log in
+              </Link>
             </p>
           </form>
         </div>
