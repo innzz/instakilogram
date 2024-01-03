@@ -31,7 +31,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const checkAuthUser = async () => {
     try {
-      const currentAccount = getCurrentUser();
+      const currentAccount = await getCurrentUser();
 
       if (currentAccount) {
         setUser({
