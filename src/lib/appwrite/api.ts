@@ -205,4 +205,8 @@ export async function getRecentPosts(){
     appwriteConfig.postCollectionId,
     [Query.orderDesc('$createdAt'), Query.limit(20)]
   )
+
+  if (!posts) throw Error;
+
+  return posts;
 } 
