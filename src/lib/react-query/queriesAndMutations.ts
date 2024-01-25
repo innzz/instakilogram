@@ -53,9 +53,16 @@ export const useCreatePost = () => {
   };
 
 export const useGetRecentPosts = ()=>{
-    return useQuery({
-        queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-        queryFn: getRecentPosts,
+    return useInfiniteQuery({
+      queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+      queryFn: getRecentPosts,
+      getNextPageParam: (lastPage)=> {
+        if (lastPage && lastPage.documents.length === 0) return null;
+
+        const lastId = lastPage?.documents[lastPage?.documents.length - 1].$id;
+  
+        return lastId;
+      }
     })
 }
 
@@ -125,7 +132,7 @@ export const useDeleteSavedPost = () => {
 export const useGetPostById = (postId: string)=>{
   return useQuery({
     queryKey: [QUERY_KEYS.GET_POST_BY_ID, postId],
-    queryFn: ()=> getPostById(postId),
+    queryFn: ({queryKey}: {queryKey: string[]})=> getPostById(queryKey),
     //refetch only if the postid changes
     enabled: !!postId
   })

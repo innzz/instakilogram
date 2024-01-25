@@ -274,11 +274,17 @@ export async function deleteFile(fileId: string) {
 
 
 //=============================== GET POSTS
-export async function getRecentPosts() {
+export async function getRecentPosts({ pageParam }:{pageParam: number}) {
+  const queries = [Query.orderDesc('$createdAt'), Query.limit(2)];
+
+  if (pageParam) {
+    queries.push(Query.cursorAfter(pageParam.toString()))
+  }
+
   const posts = await databases.listDocuments(
     appwriteConfig.databaseId,
     appwriteConfig.postCollectionId,
-    [Query.orderDesc('$createdAt'), Query.limit(20)]
+    queries
   )
 
   if (!posts) throw Error;
@@ -348,7 +354,9 @@ export async function deleteSavedPost(saveRecordId: string) {
 }
 
 //================ GET POST BY ID
-export async function getPostById(postId: string) {
+export async function getPostById(queryKey: string[]) {
+  //Getting postId from query key
+  const postId = queryKey[1];
   try {
     const post = await databases.getDocument(
       appwriteConfig.databaseId,
