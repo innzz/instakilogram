@@ -6,7 +6,7 @@ import {
     useQueryClient,
     useInfiniteQuery
   } from '@tanstack/react-query'
-import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost } from '../appwrite/api'
+import { createPost, createUserAccount, deletePost, deleteSavedPost, getCurrentUser, getInfinitePosts, getPostById, getRecentPosts, getSavedPosts, getUsers, likePost, savePost, searchPosts, signInAccount, signOutAccount, updatePost } from '../appwrite/api'
 import { QUERY_KEYS } from './queryKeys'
 
 export const useCreateUserAccount = () => {
@@ -20,6 +20,14 @@ export const useGetCurrentUser = () => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_CURRENT_USER],
     queryFn: getCurrentUser
+  })
+}
+
+
+export const useGetUsers = () => {
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_USERS],
+    queryFn: getUsers
   })
 }
 
@@ -187,5 +195,12 @@ export const useSearchPosts = (searchTerm: string)=>{
     queryKey: [QUERY_KEYS.SEARCH_POSTS, searchTerm],
     queryFn: ()=> searchPosts(searchTerm),
     enabled: !!searchTerm
+  })
+}
+
+export const useGetSavedPosts = (userId: string)=>{
+  return useQuery({
+    queryKey: [QUERY_KEYS.GET_SAVED_POSTS, userId],
+    queryFn: ()=> getSavedPosts(userId),
   })
 }

@@ -222,6 +222,26 @@
     @apply hidden md:flex px-6 py-10 flex-col justify-between min-w-[270px] bg-dark-2;
   }
 
+  /* Top creator bar */
+  .top_creators-bar {
+    @apply hidden xl:flex w-[465px] bg-dark-2 px-6 py-10 flex-col gap-5;
+  }
+
+  /* Top creators grid */
+  .top_creators-grid {
+    @apply grid grid-cols-[200px_minmax(465px,_1fr)] gap-6
+  }
+
+  /* creator card */
+  .creator-card {
+    @apply w-[190px] h-[190px] rounded-xl bg-dark-1 border-[1px] border-gray-600 flex flex-col flex-center gap-2;
+  }
+
+  /* creator card img */
+  .creator-card_img{
+    @apply w-[54px] h-[54px] rounded-full
+  }
+
   .leftsidebar-link {
     @apply rounded-lg base-medium hover:bg-primary-500 transition;
   }

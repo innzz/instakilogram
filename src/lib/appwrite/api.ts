@@ -92,6 +92,24 @@ export async function getCurrentUser() {
   }
 }
 
+// =========================== Get Users
+export async function getUsers() {
+  try {
+
+    const users = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      [Query.orderDesc('$createdAt'), Query.limit(8)]
+    )
+
+    if (!users) throw Error;
+
+    return users;
+
+  } catch (error) {
+    console.log("error", error)
+  }
+}
 
 export async function signOutAccount() {
   try {
@@ -405,6 +423,26 @@ export async function searchPosts(searchTerm: string) {
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
       [Query.search('caption', searchTerm)]
+    );
+
+    if (!posts) throw Error
+
+    return posts
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+//================ GET SAVED POSTS
+export async function getSavedPosts(userId: string) {
+
+  try {
+    const posts = await databases.listDocuments(
+      appwriteConfig.databaseId,
+      appwriteConfig.savesCollectionId,
+      [Query.equal('user', [userId])]
     );
 
     if (!posts) throw Error
