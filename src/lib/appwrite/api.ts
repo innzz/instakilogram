@@ -217,8 +217,7 @@ export async function updatePost(post: IUpdatePost) {
       await deleteFile(post.imageId);
       throw Error;
     }
-
-    return updatePost;
+    return updatedPost;
   } catch (error) {
     console.log(error);
   }
@@ -292,7 +291,7 @@ export async function deleteFile(fileId: string) {
 
 
 //=============================== GET POSTS
-export async function getRecentPosts({ pageParam }:{pageParam: number}) {
+export async function getRecentPosts({ pageParam }:{pageParam: string }) {
   const queries = [Query.orderDesc('$createdAt'), Query.limit(2)];
 
   if (pageParam) {
@@ -391,7 +390,7 @@ export async function getPostById(queryKey: string[]) {
 }
 
 //================ GET INFINITE POSTS
-export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
+export async function getInfinitePosts({ pageParam }: { pageParam: string }) {
   const queries: any[] = [Query.orderDesc('$updatedAt'), Query.limit(10)];
 
   if (pageParam) {

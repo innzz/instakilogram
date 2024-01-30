@@ -17,7 +17,7 @@ import FileUploader from "../shared/FileUploader"
 import { PostValidationSchema } from "@/lib/validation"
 import { Models } from "appwrite"
 import { useUserContext } from "@/context/AuthContext"
-import { toast, useToast } from "../ui/use-toast"
+import { useToast } from "../ui/use-toast"
 import { useNavigate } from "react-router-dom"
 import { useCreatePost, useUpdatePostById } from "@/lib/react-query/queriesAndMutations"
 

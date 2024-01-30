@@ -64,6 +64,7 @@ export const useGetRecentPosts = ()=>{
     return useInfiniteQuery({
       queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
       queryFn: getRecentPosts,
+      initialPageParam: "",
       getNextPageParam: (lastPage)=> {
         if (lastPage && lastPage.documents.length === 0) return null;
 
@@ -179,6 +180,7 @@ export const useGetPosts = ()=>{
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_INFINITE_POSTS],
     queryFn: getInfinitePosts,
+    initialPageParam: "",
     getNextPageParam: (lastPage) => {
       if (lastPage && lastPage.documents.length === 0) return null;
 
